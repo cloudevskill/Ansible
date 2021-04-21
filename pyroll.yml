@@ -24,14 +24,14 @@
         src: /home/ec2-user/ansible/lib
         dest: /tmp/payroll/lib
         remote_src: True
-        backup: yes
+        
 
     -
       name: 'Copy Meta'
       copy:
-        src: /home/ec2-user/ansible/meta
+        src: /home/ec2-user/ansible/meta/15.txt
         dest: /tmp/payroll/meta
         remote_src: True
-        backup: yes
+        
 
   
