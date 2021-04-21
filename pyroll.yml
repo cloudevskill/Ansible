@@ -1,0 +1,37 @@
+---
+- 
+  hosts: webservers
+  connection: ssh
+  become: true
+  tasks:
+    -
+      name: 'Downloading Payroll from Git'
+      git:
+        repo: 'https://github.com/cloudevskill/payroll.git'
+        clone: yes
+        dest: /home/ec2-user/ansible
+
+    # -
+    #   name: Unarchive Payroll
+    #   unarchive:
+    #     src: /home/ec2-user/payroll.tar
+    #     dest: /home/ec2-user
+    #     remote_src: True
+
+    -
+      name: 'Copy lib'    
+      copy:
+        src: /home/ec2-user/ansible/lib
+        dest: /tmp/payroll/lib
+        remote_src: True
+        backup: yes
+
+    -
+      name: 'Copy Meta'
+      copy:
+        src: /home/ec2-user/ansible/meta
+        dest: /tmp/payroll/meta
+        remote_src: True
+        backup: yes
+
+  
