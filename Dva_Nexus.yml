@@ -1,0 +1,36 @@
+- hosts: "{{target}}"
+  gather_facts: yes
+  become: yes
+  vars:
+    - target_version: "{{ varsion|default(0'0.1-SNAPSHOT') }}"
+    - target_group: web
+    - target_artifact: test
+    - teamcity_home_dir: /opt/local/tomcat
+  vars_files:
+  - '/opt/local/ansible/inventory/group_vars/{{ target }}'
+  roles:
+    - role: load_hvault
+      vars:
+        secret_path: '{{ hvault_secret_paths }}'
+  tasks:
+  - name: GetMaven Metadata
+    url: 
+      url: "https://github.com/tech/Ansible/{{ target_group.replace('.','/')}}/{{ target_artifact }}/{{ target_version }}/maven-metadata.xml"
+      return_content: true
+     run_once: true
+     register: maven_metadata_xml
+     
+   - name: Download Artifact
+     manve_artifacts:
+      group_id: "{{ target_group }}"
+      artifact_id: "{{target_artifact }}"
+      classifier: deployment
+      version: "{{ target_version }}"
+      extension: war
+      repository_url: 'https://github.com/tech/Ansible/'
+      dest: '/opt/local/test/temp/builds/{{ target_build }}'
+      verify_checksum: 'always'
+      
+    
+    
+   
